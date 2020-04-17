@@ -3,10 +3,10 @@ version: '3.1'
 
 services:
   app:
-    build: ./etc/app
+    build: ./
     restart: always
     ports:
-      - 8082:8082
+      - 8082:8000
   mongo:
     image: mongo
     restart: always
