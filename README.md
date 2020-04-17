@@ -10,11 +10,11 @@ The Route included :
 - GET("/")  -- home
 - GET("/provinces")   -- get cases in province
 - GET("/provinces/latest") -- get latest update cases in province
-- GET("/provinces/populate")  -- populate data province
+- GET("/provinces/collect")  -- collect data province
 - GET("/temanggungs") -- get cases in temanggung
 - GET("/temanggungs/latest") -- get latest cases in temanggung
-- GET("/temanggungs/populate") -- populate data in temanggung
-- GET("/populate") -- crawl all 
+- GET("/temanggungs/collect") -- collect data in temanggung
+- GET("/collect") -- crawl all 
 
 
 ~ 4 Fun Only, enjoyed!! ~
