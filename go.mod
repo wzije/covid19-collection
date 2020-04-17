@@ -24,6 +24,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pelletier/go-toml v1.7.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
+	github.com/spf13/viper v1.6.3
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	go.mongodb.org/mongo-driver v1.3.2
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect

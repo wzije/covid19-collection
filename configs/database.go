@@ -2,6 +2,7 @@ package configs
 
 import (
 	"context"
+	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -9,9 +10,18 @@ import (
 var ctx = context.Background()
 
 func DBConnect() (*mongo.Database, error) {
+
 	clientOptions := options.Client()
-	clientOptions.ApplyURI("mongodb://127.0.0.1:27017").
-		SetAuth(options.Credential{Username: "root", Password: "localhost"})
+
+	url := "mongodb://" +
+		viper.GetString("database.host") +
+		":" + viper.GetString("database.port")
+
+	user := viper.GetString("database.user")
+	pass := viper.GetString("database.password")
+
+	clientOptions.ApplyURI(url).
+		SetAuth(options.Credential{Username: user, Password: pass})
 
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
@@ -24,5 +34,5 @@ func DBConnect() (*mongo.Database, error) {
 		return nil, err
 	}
 
-	return client.Database("covid19_db"), nil
+	return client.Database(viper.GetString("database.name")), nil
 }

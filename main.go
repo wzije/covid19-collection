@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"github.com/wzije/covid19-collection/jobs"
 	"github.com/wzije/covid19-collection/routes"
 	"log"
@@ -22,14 +23,20 @@ func Init() {
 }
 
 func main() {
-	Init()
+	viper.SetConfigFile("env.yaml")
+	_ = viper.ReadInConfig()
 
-	env := os.Getenv("APP_ENV")
+	env := viper.Get("app.env")
+
+	fmt.Printf("Environment : %q ", env)
+
 	if env == "production" {
 		log.Println("Running api server in production mode")
 	} else {
 		log.Println("Running api server in dev mode")
 	}
+
+	Init()
 
 	//run service
 	log.Fatal(routes.Route().Run(":8000"))
