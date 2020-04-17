@@ -102,20 +102,30 @@ func GetLatestCasesProvince() (data.CaseProvincePlain, error) {
 }
 
 //get all cases
-func GetAllCasesProvince() (domains.Case, error) {
-	var c domains.Case
+func GetAllCasesProvince() ([]domains.Case, error) {
 
-	err := CaseCollection().
-		FindOne(
+	csr, err := CaseCollection().
+		Find(
 			context.Background(),
-			domains.Case{CreatedAt: time.Now()}).
-		Decode(&c)
+			domains.Case{})
 
 	if err != nil {
-		return domains.Case{}, err
+		return nil, err
 	}
 
-	return c, nil
+	result := make([]domains.Case, 0)
+
+	for csr.Next(context.Background()) {
+		var row domains.Case
+		err := csr.Decode(&row)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+
+		result = append(result, row)
+	}
+
+	return result, nil
 }
 
 //insert case

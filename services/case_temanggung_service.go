@@ -91,20 +91,29 @@ func GetLatestCaseInTmg() (data.CaseTemanggungPlain, error) {
 }
 
 //get all cases
-func GetAllCaseInTmg() (domains.CaseInTemanggung, error) {
-	var c domains.CaseInTemanggung
-
-	err := TmgCollection().
-		FindOne(
+func GetAllCaseInTmg() ([]domains.CaseInTemanggung, error) {
+	csr, err := CaseCollection().
+		Find(
 			context.Background(),
-			domains.CaseInTemanggung{}).
-		Decode(&c)
+			domains.CaseInTemanggung{})
 
 	if err != nil {
-		return domains.CaseInTemanggung{}, err
+		return nil, err
 	}
 
-	return c, nil
+	result := make([]domains.CaseInTemanggung, 0)
+
+	for csr.Next(context.Background()) {
+		var row domains.CaseInTemanggung
+		err := csr.Decode(&row)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+
+		result = append(result, row)
+	}
+
+	return result, nil
 }
 
 //insert case
