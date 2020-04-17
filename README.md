@@ -14,7 +14,7 @@ The Route included :
 - GET("/temanggungs") -- get cases in temanggung
 - GET("/temanggungs/latest") -- get latest cases in temanggung
 - GET("/temanggungs/collect") -- collect data in temanggung
-- GET("/collect") -- crawl all 
+- GET("/collect") -- Collect all 
 
 
 ~ 4 Fun Only, enjoyed!! ~
