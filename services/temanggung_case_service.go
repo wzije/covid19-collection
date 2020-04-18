@@ -118,9 +118,9 @@ func GetAllTemanggungCases() ([]domains.TemanggengCase, error) {
 }
 
 //insert case
-func StoreTemanggungCase(c domains.TemanggengCase) {
+func StoreTemanggungCase(tc domains.TemanggengCase) {
 	_, err := TemanggungCaseCollection().
-		InsertOne(context.Background(), c)
+		InsertOne(context.Background(), tc)
 
 	if err != nil {
 		log.Fatal(err.Error())

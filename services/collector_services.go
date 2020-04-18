@@ -154,17 +154,18 @@ func collectTemanggung() {
 							}
 						})
 
-					StoreTemanggungCase(domains.TemanggengCase{
-						ID:        trIdx + 1,
-						Area:      area,
-						ODP:       odp,
-						PDP:       pdp,
-						Confirmed: confirmed,
-						Recovered: recovered,
-						Deaths:    deaths,
-						CreatedAt: utils.Time().Now(),
-						UpdatedAt: utils.Time().Now(),
-					})
+					StoreTemanggungCase(
+						domains.TemanggengCase{
+							ID:        trIdx + 1,
+							Area:      area,
+							ODP:       odp,
+							PDP:       pdp,
+							Confirmed: confirmed,
+							Recovered: recovered,
+							Deaths:    deaths,
+							CreatedAt: utils.Time().Now(),
+							UpdatedAt: utils.Time().Now(),
+						})
 
 				})
 

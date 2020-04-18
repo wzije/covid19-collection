@@ -131,9 +131,9 @@ func GetAllProvinceCases() ([]domains.ProvinceCase, error) {
 }
 
 //insert case
-func StoreProvinceCase(c domains.ProvinceCase) {
+func StoreProvinceCase(pc domains.ProvinceCase) {
 	_, err := ProvinceCaseCollection().
-		InsertOne(context.Background(), c)
+		InsertOne(context.Background(), pc)
 
 	if err != nil {
 		log.Fatal(err.Error())
