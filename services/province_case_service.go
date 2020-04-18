@@ -107,7 +107,7 @@ func GetAllProvinceCases() ([]domains.ProvinceCase, error) {
 	ctx := context.Background()
 
 	csr, err := ProvinceCaseCollection().
-		Find(ctx, domains.ProvinceCase{})
+		Find(ctx, bson.D{})
 
 	if err != nil {
 		return nil, err

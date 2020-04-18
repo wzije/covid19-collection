@@ -92,10 +92,11 @@ func GetLatestTemanggungCases() (data.TemanggungCasePlain, error) {
 
 //get all cases
 func GetAllTemanggungCases() ([]domains.TemanggengCase, error) {
+	ctx := context.Background()
+
 	csr, err := ProvinceCaseCollection().
-		Find(
-			context.Background(),
-			domains.TemanggengCase{})
+		Find(ctx,
+			bson.D{})
 
 	if err != nil {
 		return nil, err
@@ -103,7 +104,7 @@ func GetAllTemanggungCases() ([]domains.TemanggengCase, error) {
 
 	result := make([]domains.TemanggengCase, 0)
 
-	for csr.Next(context.Background()) {
+	for csr.Next(ctx) {
 		var row domains.TemanggengCase
 		err := csr.Decode(&row)
 		if err != nil {
