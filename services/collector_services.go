@@ -90,6 +90,10 @@ func collectProvince() {
 				})
 		})
 
+	cl.OnError(func(r *colly.Response, err error) {
+		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
+	})
+
 	//start scrap
 	cl.Visit(urlKompas)
 
@@ -118,6 +122,7 @@ func collectTemanggung() {
 
 	cl.OnHTML("#sebaran",
 		func(e *colly.HTMLElement) {
+			fmt.Print("------- start roll ---------")
 			e.ForEach("table tbody tr",
 				func(trIdx int, e *colly.HTMLElement) {
 
@@ -167,6 +172,10 @@ func collectTemanggung() {
 
 				})
 		})
+
+	cl.OnError(func(r *colly.Response, err error) {
+		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
+	})
 
 	//start crawl
 	cl.Visit(urlTemanggung)
