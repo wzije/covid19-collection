@@ -9,7 +9,7 @@ import (
 
 var ctx = context.Background()
 
-func DBConnect() (*mongo.Database, error) {
+func MongoDB() (*mongo.Database, error) {
 
 	clientOptions := options.Client()
 

@@ -13,17 +13,17 @@ import (
 	"time"
 )
 
-func CaseCollection() *mongo.Collection {
-	db, err := configs.DBConnect()
+func ProvinceCaseCollection() *mongo.Collection {
+	db, err := configs.MongoDB()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	return db.Collection("cases")
+	return db.Collection("province_cases")
 }
 
 func CaseInfoCollection() *mongo.Collection {
-	db, err := configs.DBConnect()
+	db, err := configs.MongoDB()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -33,7 +33,7 @@ func CaseInfoCollection() *mongo.Collection {
 
 // --- case info ---
 //get latest cases
-func GetLatestCasesProvince() (data.CaseProvincePlain, error) {
+func GetLatestProvinceCases() (data.ProvinceCasePlain, error) {
 
 	ctx := context.Background()
 
@@ -61,18 +61,18 @@ func GetLatestCasesProvince() (data.CaseProvincePlain, error) {
 	`)), true, &pipeline)
 
 	if err != nil {
-		return data.CaseProvincePlain{}, err
+		return data.ProvinceCasePlain{}, err
 	}
 
-	csr, err := CaseCollection().Aggregate(ctx, pipeline)
+	csr, err := ProvinceCaseCollection().Aggregate(ctx, pipeline)
 
 	if err != nil {
-		return data.CaseProvincePlain{}, err
+		return data.ProvinceCasePlain{}, err
 	}
 
 	defer csr.Close(ctx)
 
-	cases := make([]domains.Case, 0)
+	cases := make([]domains.ProvinceCase, 0)
 
 	if err = csr.All(ctx, &cases); err != nil {
 		panic(err)
@@ -90,7 +90,7 @@ func GetLatestCasesProvince() (data.CaseProvincePlain, error) {
 		totalRecovered += cases[i].Recovered
 	}
 
-	result := data.CaseProvincePlain{
+	result := data.ProvinceCasePlain{
 		Cases:       cases,
 		Confirm:     totalConfirmed,
 		Deaths:      totalDeaths,
@@ -102,21 +102,23 @@ func GetLatestCasesProvince() (data.CaseProvincePlain, error) {
 }
 
 //get all cases
-func GetAllCasesProvince() ([]domains.Case, error) {
+func GetAllProvinceCases() ([]domains.ProvinceCase, error) {
 
-	csr, err := CaseCollection().
-		Find(
-			context.Background(),
-			domains.Case{})
+	ctx := context.Background()
+
+	csr, err := ProvinceCaseCollection().
+		Find(ctx, domains.ProvinceCase{})
 
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]domains.Case, 0)
+	defer csr.Close(ctx)
 
-	for csr.Next(context.Background()) {
-		var row domains.Case
+	result := make([]domains.ProvinceCase, 0)
+
+	for csr.Next(ctx) {
+		var row domains.ProvinceCase
 		err := csr.Decode(&row)
 		if err != nil {
 			log.Fatal(err.Error())
@@ -129,8 +131,8 @@ func GetAllCasesProvince() ([]domains.Case, error) {
 }
 
 //insert case
-func StoreCaseProvince(c domains.Case) {
-	_, err := CaseCollection().
+func StoreProvinceCase(c domains.ProvinceCase) {
+	_, err := ProvinceCaseCollection().
 		InsertOne(context.Background(), c)
 
 	if err != nil {

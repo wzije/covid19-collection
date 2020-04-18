@@ -11,8 +11,8 @@ import (
 	"strings"
 )
 
-func TmgCollection() *mongo.Collection {
-	db, err := configs.DBConnect()
+func TemanggungCaseCollection() *mongo.Collection {
+	db, err := configs.MongoDB()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -21,7 +21,7 @@ func TmgCollection() *mongo.Collection {
 }
 
 //get latest cases
-func GetLatestCaseInTmg() (data.CaseTemanggungPlain, error) {
+func GetLatestTemanggungCases() (data.TemanggungCasePlain, error) {
 
 	ctx := context.Background()
 
@@ -43,18 +43,18 @@ func GetLatestCaseInTmg() (data.CaseTemanggungPlain, error) {
 	`)), true, &pipeline)
 
 	if err != nil {
-		return data.CaseTemanggungPlain{}, err
+		return data.TemanggungCasePlain{}, err
 	}
 
-	csr, err := TmgCollection().Aggregate(ctx, pipeline)
+	csr, err := TemanggungCaseCollection().Aggregate(ctx, pipeline)
 
 	if err != nil {
-		return data.CaseTemanggungPlain{}, err
+		return data.TemanggungCasePlain{}, err
 	}
 
 	defer csr.Close(ctx)
 
-	cases := make([]domains.CaseInTemanggung, 0)
+	cases := make([]domains.TemanggengCase, 0)
 
 	if err = csr.All(ctx, &cases); err != nil {
 		panic(err)
@@ -77,7 +77,7 @@ func GetLatestCaseInTmg() (data.CaseTemanggungPlain, error) {
 		totalPDP += cases[i].ODP
 	}
 
-	result := data.CaseTemanggungPlain{
+	result := data.TemanggungCasePlain{
 		Cases:       cases,
 		Confirm:     totalConfirmed,
 		Deaths:      totalDeaths,
@@ -91,20 +91,20 @@ func GetLatestCaseInTmg() (data.CaseTemanggungPlain, error) {
 }
 
 //get all cases
-func GetAllCaseInTmg() ([]domains.CaseInTemanggung, error) {
-	csr, err := CaseCollection().
+func GetAllTemanggungCases() ([]domains.TemanggengCase, error) {
+	csr, err := ProvinceCaseCollection().
 		Find(
 			context.Background(),
-			domains.CaseInTemanggung{})
+			domains.TemanggengCase{})
 
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]domains.CaseInTemanggung, 0)
+	result := make([]domains.TemanggengCase, 0)
 
 	for csr.Next(context.Background()) {
-		var row domains.CaseInTemanggung
+		var row domains.TemanggengCase
 		err := csr.Decode(&row)
 		if err != nil {
 			log.Fatal(err.Error())
@@ -117,8 +117,8 @@ func GetAllCaseInTmg() ([]domains.CaseInTemanggung, error) {
 }
 
 //insert case
-func StoreCaseTmg(c domains.CaseInTemanggung) {
-	_, err := TmgCollection().
+func StoreTemanggungCase(c domains.TemanggengCase) {
+	_, err := TemanggungCaseCollection().
 		InsertOne(context.Background(), c)
 
 	if err != nil {

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gocolly/colly"
 	"github.com/wzije/covid19-collection/domains"
@@ -12,40 +13,43 @@ import (
 const urlKompas string = "https://www.kompas.com/covid-19"
 const urlTemanggung string = "http://corona.temanggungkab.go.id"
 
-func CrawlAll() {
+func CollectAll() error {
 	fmt.Printf("start crawl \n")
 
 	if isTodayUpdated() {
 		fmt.Printf("sudah update hari ini \n")
+		return errors.New("hari ini sudah update")
 	} else {
-		crawlInProvince()
-		crawlInTemanggung()
-
+		collectProvince()
+		collectTemanggung()
+		StoreCaseInfo()
+		return nil
 	}
 }
 
-func CrawlProvince() {
+func CollectProvince() {
 
 	fmt.Printf("start crawl \n")
 
-	if isTodayUpdated() {
-		fmt.Printf("sudah update hari ini \n")
-	} else {
-		crawlInProvince()
-	}
+	//if isTodayUpdated() {
+	fmt.Printf("sudah update hari ini \n")
+
+	//} else {
+	collectProvince()
+	//	return nil
 }
 
-func CrawlTemanggung() {
+func CollectTemanggung() {
 	fmt.Printf("start crawl \n")
 
 	//if isTodayUpdated() {
 	//	fmt.Printf("sudah update hari ini \n")
 	//} else {
-		crawlInTemanggung()
+	collectTemanggung()
 	//}
 }
 
-func crawlInProvince() {
+func collectProvince() {
 
 	cl := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"),
@@ -83,7 +87,7 @@ func crawlInProvince() {
 						province, confirmed, deaths, recovered)
 
 					//Insert data to db
-					StoreCaseProvince(domains.Case{
+					StoreProvinceCase(domains.ProvinceCase{
 						ID:        rowIdx + 1,
 						Confirmed: utils.StringToInt(confirmed),
 						Deaths:    utils.StringToInt(deaths),
@@ -96,9 +100,6 @@ func crawlInProvince() {
 					//set latest updated
 
 				})
-
-			StoreCaseInfo()
-
 		})
 
 	//start scrap
@@ -108,7 +109,7 @@ func crawlInProvince() {
 	//cl.Wait()
 }
 
-func crawlInTemanggung() {
+func collectTemanggung() {
 	cl := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"),
 		colly.AllowURLRevisit(),
@@ -167,7 +168,7 @@ func crawlInTemanggung() {
 							}
 						})
 
-					StoreCaseTmg(domains.CaseInTemanggung{
+					StoreTemanggungCase(domains.TemanggengCase{
 						ID:        trIdx + 1,
 						Area:      area,
 						ODP:       odp,
@@ -181,7 +182,7 @@ func crawlInTemanggung() {
 
 				})
 
-			StoreCaseInfo()
+			//StoreCaseInfo()
 		})
 
 	//start scrap

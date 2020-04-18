@@ -3,7 +3,7 @@ package domains
 import "time"
 
 //model/data
-type Case struct {
+type ProvinceCase struct {
 	ID        int       `json:"id,omitempty"`
 	Province  string    `json:"province"`
 	Confirmed int       `json:"confirm"`
@@ -13,12 +13,12 @@ type Case struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
 
-func (ci Case) CreatedAtID() time.Time {
+func (ci ProvinceCase) CreatedAtID() time.Time {
 	unixDate := ci.CreatedAt.Unix()
 	return time.Unix(unixDate, 0)
 }
 
-func (ci Case) UpdatedAtID() time.Time {
+func (ci ProvinceCase) UpdatedAtID() time.Time {
 	unixDate := ci.UpdatedAt.Unix()
 	return time.Unix(unixDate, 0)
 }

@@ -6,7 +6,15 @@ import (
 )
 
 func CrawlAll(c *gin.Context) {
-	services.CrawlAll()
+	err := services.CollectAll()
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"status":  "Error",
+			"message": err.Error(),
+			"data":    nil,
+		})
+	}
 
 	c.JSON(200, gin.H{
 		"code":    200,
@@ -16,7 +24,7 @@ func CrawlAll(c *gin.Context) {
 }
 
 func CrawlInProvince(c *gin.Context) {
-	services.CrawlProvince()
+	services.CollectProvince()
 
 	c.JSON(200, gin.H{
 		"code":    200,
@@ -27,12 +35,12 @@ func CrawlInProvince(c *gin.Context) {
 
 func LatestCasesInProvince(c *gin.Context) {
 
-	cases, err := services.GetLatestCasesProvince()
+	cases, err := services.GetLatestProvinceCases()
 
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
-			"status":  "fetched",
+			"status":  "Error",
 			"message": err.Error(),
 			"data":    nil,
 		})
@@ -48,7 +56,7 @@ func LatestCasesInProvince(c *gin.Context) {
 
 func GetAllCasesInProvince(c *gin.Context) {
 
-	cases, err := services.GetAllCasesProvince()
+	cases, err := services.GetAllProvinceCases()
 
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -111,7 +119,7 @@ func GetAllCasesInProvince(c *gin.Context) {
 //---temanggung
 
 func CrawlTmg(c *gin.Context) {
-	services.CrawlTemanggung()
+	services.CollectTemanggung()
 
 	c.JSON(200, gin.H{
 		"code":    200,
@@ -121,7 +129,7 @@ func CrawlTmg(c *gin.Context) {
 }
 
 func GetLatestCasesInTemanggung(c *gin.Context) {
-	cases, err := services.GetLatestCaseInTmg()
+	cases, err := services.GetLatestTemanggungCases()
 
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -141,7 +149,7 @@ func GetLatestCasesInTemanggung(c *gin.Context) {
 }
 
 func GetAllCaseInTemanggung(c *gin.Context) {
-	cases, err := services.GetAllCaseInTmg()
+	cases, err := services.GetAllTemanggungCases()
 
 	if err != nil {
 		c.JSON(400, gin.H{

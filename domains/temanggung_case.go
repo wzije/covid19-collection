@@ -3,7 +3,7 @@ package domains
 import "time"
 
 //model/data
-type CaseInTemanggung struct {
+type TemanggengCase struct {
 	ID        int       `json:"id,omitempty"`
 	Area      string    `json:"area"`
 	ODP       int       `json:"id,omitempty"`
@@ -15,16 +15,12 @@ type CaseInTemanggung struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
 
-type CaseInTemanggungInfo struct {
-	LastUpdate time.Time
-}
-
-func (ci CaseInTemanggung) CreatedAtID() time.Time {
+func (ci TemanggengCase) CreatedAtID() time.Time {
 	unixDate := ci.CreatedAt.Unix()
 	return time.Unix(unixDate, 0)
 }
 
-func (ci CaseInTemanggung) UpdatedAtID() time.Time {
+func (ci TemanggengCase) UpdatedAtID() time.Time {
 	unixDate := ci.UpdatedAt.Unix()
 	return time.Unix(unixDate, 0)
 }

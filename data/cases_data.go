@@ -5,16 +5,16 @@ import (
 	"time"
 )
 
-type CaseProvincePlain struct {
-	Cases       []domains.Case
+type ProvinceCasePlain struct {
+	Cases       []domains.ProvinceCase
 	Confirm     int
 	Deaths      int
 	Recovered   int
 	LastUpdated time.Time
 }
 
-type CaseTemanggungPlain struct {
-	Cases       []domains.CaseInTemanggung
+type TemanggungCasePlain struct {
+	Cases       []domains.TemanggengCase
 	Confirm     int
 	Deaths      int
 	Recovered   int
