@@ -8,6 +8,7 @@ import (
 	"github.com/wzije/covid19-collection/domains"
 	"github.com/wzije/covid19-collection/utils"
 	"log"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -98,7 +99,7 @@ func collectProvince() {
 	cl.Visit(urlKompas)
 
 	// Wait until threads are finished
-	//cl.Wait()
+	cl.Wait()
 }
 
 func collectTemanggung() {
@@ -108,6 +109,10 @@ func collectTemanggung() {
 		colly.Async(true),
 		colly.MaxDepth(2),
 	)
+
+	cl.WithTransport(&http.Transport{
+		DisableKeepAlives: true,
+	})
 
 	cl.Limit(&colly.LimitRule{
 		DomainGlob:  "*",
@@ -179,6 +184,8 @@ func collectTemanggung() {
 
 	//start crawl
 	cl.Visit(urlTemanggung)
+
+	cl.Wait()
 }
 
 func collectTemanggungSoup() {
