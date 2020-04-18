@@ -7,7 +7,7 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/wzije/covid19-collection/domains"
 	"github.com/wzije/covid19-collection/utils"
-	"os"
+	"log"
 	"strings"
 	"time"
 )
@@ -175,7 +175,7 @@ func collectTemanggungOld() {
 func collectTemanggung() {
 	resp, err := soup.Get(urlTemanggung)
 	if err != nil {
-		os.Exit(1)
+		log.Fatal(err.Error())
 	}
 	doc := soup.HTMLParse(resp)
 	sebaran := doc.Find("section", "id", "sebaran")
