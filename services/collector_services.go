@@ -3,11 +3,9 @@ package services
 import (
 	"errors"
 	"fmt"
-	"github.com/anaskhan96/soup"
 	"github.com/gocolly/colly"
 	"github.com/wzije/covid19-collection/domains"
 	"github.com/wzije/covid19-collection/utils"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -15,6 +13,7 @@ import (
 
 const urlKompas string = "https://www.kompas.com/covid-19"
 const urlTemanggung string = "https://corona.temanggungkab.go.id"
+const userAgent string = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36"
 
 func CollectAll() error {
 	fmt.Printf("start crawl \n")
@@ -41,7 +40,7 @@ func CollectTemanggung() {
 func collectProvince() {
 
 	cl := colly.NewCollector(
-		colly.UserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"),
+		colly.UserAgent(userAgent),
 		colly.AllowURLRevisit(),
 		// Allow crawling to be done in parallel / async
 		colly.Async(true),
@@ -104,7 +103,7 @@ func collectProvince() {
 
 func collectTemanggung() {
 	cl := colly.NewCollector(
-		colly.UserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"),
+		colly.UserAgent(userAgent),
 		colly.AllowURLRevisit(),
 		colly.Async(true),
 		colly.MaxDepth(2),
@@ -187,42 +186,4 @@ func collectTemanggung() {
 	cl.Visit(urlTemanggung)
 
 	cl.Wait()
-}
-
-func collectTemanggungSoup() {
-	resp, err := soup.Get(urlTemanggung)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	doc := soup.HTMLParse(resp)
-	sebaran := doc.Find("section", "id", "sebaran")
-	table := sebaran.Find("table")
-	tbody := table.Find("tbody")
-	tr := tbody.FindAll("tr")
-
-	//fmt.Print(tr)
-	for trIdx, row := range tr {
-		area := row.FindAll("td")[1].Text()
-		odp := row.FindAll("td")[2].Text()
-		pdp := row.FindAll("td")[3].Text()
-		confirmed := row.FindAll("td")[4].Text()
-		deaths := row.FindAll("td")[5].Text()
-		recovered := row.FindAll("td")[6].Text()
-
-		fmt.Print(area, odp, pdp, confirmed, deaths, recovered)
-
-		StoreTemanggungCase(
-			domains.TemanggengCase{
-				ID:        trIdx + 1,
-				Area:      area,
-				ODP:       utils.StringToInt(odp),
-				PDP:       utils.StringToInt(pdp),
-				Confirmed: utils.StringToInt(confirmed),
-				Recovered: utils.StringToInt(recovered),
-				Deaths:    utils.StringToInt(deaths),
-				CreatedAt: utils.Time().Now(),
-				UpdatedAt: utils.Time().Now(),
-			})
-
-	}
 }
