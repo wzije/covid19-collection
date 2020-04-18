@@ -179,7 +179,6 @@ func collectTemanggung() {
 
 	cl.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
-		cl.Visit(urlTemanggung)
 	})
 
 	//start crawl
