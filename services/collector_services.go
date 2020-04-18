@@ -3,9 +3,11 @@ package services
 import (
 	"errors"
 	"fmt"
+	"github.com/anaskhan96/soup"
 	"github.com/gocolly/colly"
 	"github.com/wzije/covid19-collection/domains"
 	"github.com/wzije/covid19-collection/utils"
+	"os"
 	"strings"
 	"time"
 )
@@ -95,22 +97,18 @@ func collectProvince() {
 	//cl.Wait()
 }
 
-func collectTemanggung() {
+func collectTemanggungOld() {
 	cl := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"),
 		colly.AllowURLRevisit(),
-		// Allow crawling to be done in parallel / async
 		colly.Async(true),
 		colly.MaxDepth(2),
 	)
 
 	cl.Limit(&colly.LimitRule{
-		// Filter domains affected by this rule
-		DomainGlob: "*",
-		// Set a delay between requests to these domains
+		DomainGlob:  "*",
 		Delay:       2 * time.Second,
 		Parallelism: 2,
-		// Add an additional random delay
 		RandomDelay: 2 * time.Second,
 	})
 
@@ -168,10 +166,46 @@ func collectTemanggung() {
 						})
 
 				})
-
-			//StoreCaseInfo()
 		})
 
-	//start scrap
+	//start crawl
 	cl.Visit(urlTemanggung)
+}
+
+func collectTemanggung() {
+	resp, err := soup.Get(urlTemanggung)
+	if err != nil {
+		os.Exit(1)
+	}
+	doc := soup.HTMLParse(resp)
+	sebaran := doc.Find("section", "id", "sebaran")
+	table := sebaran.Find("table")
+	tbody := table.Find("tbody")
+	tr := tbody.FindAll("tr")
+
+	//fmt.Print(tr)
+	for trIdx, row := range tr {
+		area := row.FindAll("td")[1].Text()
+		odp := row.FindAll("td")[2].Text()
+		pdp := row.FindAll("td")[3].Text()
+		confirmed := row.FindAll("td")[4].Text()
+		deaths := row.FindAll("td")[5].Text()
+		recovered := row.FindAll("td")[6].Text()
+
+		fmt.Print(area, odp, pdp, confirmed, deaths, recovered)
+
+		StoreTemanggungCase(
+			domains.TemanggengCase{
+				ID:        trIdx + 1,
+				Area:      area,
+				ODP:       utils.StringToInt(odp),
+				PDP:       utils.StringToInt(pdp),
+				Confirmed: utils.StringToInt(confirmed),
+				Recovered: utils.StringToInt(recovered),
+				Deaths:    utils.StringToInt(deaths),
+				CreatedAt: utils.Time().Now(),
+				UpdatedAt: utils.Time().Now(),
+			})
+
+	}
 }
