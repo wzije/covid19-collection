@@ -94,7 +94,7 @@ func GetLatestTemanggungCases() (data.TemanggungCasePlain, error) {
 func GetAllTemanggungCases() ([]domains.TemanggengCase, error) {
 	ctx := context.Background()
 
-	csr, err := ProvinceCaseCollection().
+	csr, err := TemanggungCaseCollection().
 		Find(ctx,
 			bson.D{})
 
