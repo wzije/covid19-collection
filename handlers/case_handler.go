@@ -14,13 +14,14 @@ func CrawlAll(c *gin.Context) {
 			"message": err.Error(),
 			"data":    nil,
 		})
-	}
+	} else {
 
-	c.JSON(200, gin.H{
-		"code":    200,
-		"status":  "OK",
-		"message": "Generate data is successfully",
-	})
+		c.JSON(200, gin.H{
+			"code":    200,
+			"status":  "OK",
+			"message": "Generate data is successfully",
+		})
+	}
 }
 
 func CrawlInProvince(c *gin.Context) {
@@ -44,14 +45,15 @@ func LatestCasesInProvince(c *gin.Context) {
 			"message": err.Error(),
 			"data":    nil,
 		})
-	}
+	} else {
 
-	c.JSON(200, gin.H{
-		"code":    200,
-		"status":  "fetched",
-		"message": "get latest cases done",
-		"data":    cases,
-	})
+		c.JSON(200, gin.H{
+			"code":    200,
+			"status":  "fetched",
+			"message": "get latest cases done",
+			"data":    cases,
+		})
+	}
 }
 
 func GetAllCasesInProvince(c *gin.Context) {
@@ -65,14 +67,15 @@ func GetAllCasesInProvince(c *gin.Context) {
 			"message": err.Error(),
 			"data":    nil,
 		})
-	}
+	} else {
 
-	c.JSON(200, gin.H{
-		"code":    200,
-		"status":  "fetched",
-		"message": "get cases done",
-		"data":    cases,
-	})
+		c.JSON(200, gin.H{
+			"code":    200,
+			"status":  "fetched",
+			"message": "get cases done",
+			"data":    cases,
+		})
+	}
 }
 
 //func CaseInfo(c *gin.Context) {
@@ -138,14 +141,15 @@ func GetLatestCasesInTemanggung(c *gin.Context) {
 			"message": err.Error(),
 			"data":    nil,
 		})
-	}
+	} else {
 
-	c.JSON(200, gin.H{
-		"code":    200,
-		"status":  "fetched",
-		"message": "get latest cases in Temanggung done",
-		"data":    cases,
-	})
+		c.JSON(200, gin.H{
+			"code":    200,
+			"status":  "fetched",
+			"message": "get latest cases in Temanggung done",
+			"data":    cases,
+		})
+	}
 }
 
 func GetAllCaseInTemanggung(c *gin.Context) {
@@ -158,12 +162,13 @@ func GetAllCaseInTemanggung(c *gin.Context) {
 			"message": err.Error(),
 			"data":    nil,
 		})
-	}
+	} else {
 
-	c.JSON(200, gin.H{
-		"code":    200,
-		"status":  "fetched",
-		"message": "get cases in All temanggung done",
-		"data":    cases,
-	})
+		c.JSON(200, gin.H{
+			"code":    200,
+			"status":  "fetched",
+			"message": "get cases in All temanggung done",
+			"data":    cases,
+		})
+	}
 }

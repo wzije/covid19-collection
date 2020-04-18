@@ -28,25 +28,11 @@ func CollectAll() error {
 }
 
 func CollectProvince() {
-
-	fmt.Printf("start crawl \n")
-
-	//if isTodayUpdated() {
-	fmt.Printf("sudah update hari ini \n")
-
-	//} else {
 	collectProvince()
-	//	return nil
 }
 
 func CollectTemanggung() {
-	fmt.Printf("start crawl \n")
-
-	//if isTodayUpdated() {
-	//	fmt.Printf("sudah update hari ini \n")
-	//} else {
 	collectTemanggung()
-	//}
 }
 
 func collectProvince() {
@@ -122,10 +108,10 @@ func collectTemanggung() {
 		// Filter domains affected by this rule
 		DomainGlob: "*",
 		// Set a delay between requests to these domains
-		Delay:       1 * time.Second,
+		Delay:       2 * time.Second,
 		Parallelism: 2,
 		// Add an additional random delay
-		RandomDelay: 1 * time.Second,
+		RandomDelay: 2 * time.Second,
 	})
 
 	cl.OnRequest(func(r *colly.Request) {
