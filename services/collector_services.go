@@ -13,7 +13,7 @@ import (
 )
 
 const urlKompas string = "https://www.kompas.com/covid-19"
-const urlTemanggung string = "http://corona.temanggungkab.go.id"
+const urlTemanggung string = "https://corona.temanggungkab.go.id"
 
 func CollectAll() error {
 	fmt.Printf("start crawl \n")
@@ -97,7 +97,7 @@ func collectProvince() {
 	//cl.Wait()
 }
 
-func collectTemanggungOld() {
+func collectTemanggung() {
 	cl := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"),
 		colly.AllowURLRevisit(),
@@ -172,7 +172,7 @@ func collectTemanggungOld() {
 	cl.Visit(urlTemanggung)
 }
 
-func collectTemanggung() {
+func collectTemanggungSoup() {
 	resp, err := soup.Get(urlTemanggung)
 	if err != nil {
 		log.Fatal(err.Error())
